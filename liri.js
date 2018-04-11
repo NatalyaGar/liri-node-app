@@ -1,6 +1,6 @@
-// require("dotenv").config();
+require("dotenv").config();
 //Load the fs package to read and write
-// var fs = require ("fs");
+var fs = require ("fs");
 
 // Include the request npm package (Don't forget to run "npm install request" in this folder first!)
 var request = require("request");
@@ -10,7 +10,7 @@ var keys = require('./keys.js');
 
 var Twitter = require('twitter');
 
-var spotify = require('spotify');
+var Spotify = require('node-spotify-api');
 
 var getMyTweets = function(){ 
 
@@ -26,29 +26,71 @@ var getMyTweets = function(){
         }
       }
     });
-}   
-//  var spotify = new Spotify(keys.spotifyKeys); 
+} 
+
+
  var getArtistNames = function(artist){
      return artist.name;
  }
  var getMeSpotify = function(songName){
-    spotify.search({ type: 'track', query: songName}, function(err, data) {
+    var spotify = new Spotify({
+        id:process.env.SPOTIFY_ID,
+        secret:process.env.SPOTIFY_SECRET
+    });
+   
+        spotify.search({ type: 'track', query: songName }, function(err, data) {
         if ( err ) {
-            console.log('Error occurred: ' + err);
-            return;
+         return console.log('Error occurred: ' + err);
+           
         }
-        // console.log(data);
-        // var songs = data.tracks.items;
-        var songs = data.tracks;
+        console.log(data);
+        
+        var songs = data.tracks.items;
+        
         for(var i=0; i<songs.length; i++){
             console.log[i];
-            console.log('artinst(s); ' + songs[i].artists.map(getArtistNames));
+            console.log('artist(s); ' + songs[i].artists.map(getArtistNames));
             console.log('song name ' + songs[i].name);
             console.log('album: ' + songs[i].album.name);
             console.log('------------------------');
         }
     });
 }
+
+var getMeMovie = function(movieName){
+  request('http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy', function (error, response, body) {
+    if(!error && response.statusCode == 200){
+        console.log(body); 
+     var jsonData = JSON.parse(body);
+     
+     console.log('Title: ' + jsonData.Title);
+     console.log('Year: ' + jsonData.Year);
+     console.log('IMDB Rating ' + jsonData.imdbRating);
+     console.log('Rotten Tomatoes rating: ' + jsonData.Ratings[1].Value);
+     console.log('Coutry: ' + jsonData.Country);
+     console.log('Language ' + jsonData.Language);
+     console.log('Plot ' + jsonData.Plot);
+     console.log('Actors; ' + jsonData.Actors);
+
+
+    }
+  });
+}
+
+var doWhatItSays = function(){
+    fs.readFile('random.txt', 'utf8', function (err, data){
+        if (err) throw err;
+        // console.log(data);
+        var dataArr = data.split(','); 
+        
+        if (dataArr.length == 2){
+            pick(dataArr[0], dataArr[1]);
+        }else if(dataArr.length == 1) {
+            pick(dataArr[0]);
+        }
+        
+    });
+}    
 //Switch case statment
 var pick = function(caseData, functionData){
   switch(caseData){
@@ -56,8 +98,14 @@ var pick = function(caseData, functionData){
         getMyTweets();
         break;
     case "spotify-this-song":
-    getMeSpotify(functionData);
+        getMeSpotify(functionData);
+         break; 
+    case 'movie-this':
+        getMeMovie(functionData);
     break;    
+    case 'do-what-it-says':
+    doWhatItSays();
+    break;      
     default:
     console.log('Liri does not know that');    
   }
@@ -74,48 +122,6 @@ runThis(process.argv[2], process.argv[3]);
 
 
 
-
-//     case "spotify-this-song":
-//     if(sm){
-//         spotifySong(x);
-//     }else{
-//         spotifySong("The Sign");
-//     }
-//     break;
-
-//     case "movie-this":
-//     if(sm){
-//         ombData(sm)
-//     } else{
-//         ombData("Mr. Nodody")
-//     }
-//     break;
-
-//     case "do-what-it-says":
-//     doIt();
-//     break;
-// }
-
-// function showTweets(){
-//     //Display 20 Tweets
-//     var name = "Nat";
-//     client.get("statuses", name, function(error, tweets, response){
-//      if(!error){
-//          for(var i = 0; i<tweets.length; i++){
-//              var date = tweets[i].created_at;
-//              console.log("Nat:" + tweets[i].text + " Created At: " + date.substring(0, 19));
-//              console.log("-----------------------");
-
-//              //adds text to log.txt file
-//              fs.appendFile("log.txt" , "Nat" + tweets[i].text + " Created At; " + date.substring(0, 19));
-//              fs.appendFile("log.txt", "---------------------");
-//          }
-//         }else{
-//             console.log("Error occurred");
-//         }
-     
-//     });
-// }
 
 
   
