@@ -116,7 +116,7 @@ var pick = function(caseData, functionData){
     }
     else {
         if (process.argv[3] != null) {
-            console.log("if the an argument= null")
+            console.log("if the an argument not null")
             var song = process.argv.slice(3).join('+');
             getMeSpotify(functionData);
         }
@@ -124,6 +124,7 @@ var pick = function(caseData, functionData){
             const songName = "The+Sign+Ace+of+Base";
             console.log("if the default song")
             getMeSpotify(songName);
+
         }
     }
          break; 
@@ -134,7 +135,7 @@ var pick = function(caseData, functionData){
     } 
     else {
         if (process.argv[3] != null) {
-            console.log("if the movie argument= null")
+            console.log("if the movie argument not null")
             var movie = process.argv.slice(3).join('+');
             getMeMovie(functionData);
         }
