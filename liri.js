@@ -15,7 +15,10 @@ var Spotify = require('node-spotify-api');
 var getMyTweets = function(){ 
 
     var client = new Twitter(keys.twitterKeys);
-    var params = {screen_name: 'Nat97941816'};
+    var params = {
+        screen_name: 'Nat97941816',
+        count: 20
+    };
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
       if (!error) {
         console.log(tweets);
@@ -33,16 +36,20 @@ var getMyTweets = function(){
      return artist.name;
  }
  var getMeSpotify = function(songName){
+    
     var spotify = new Spotify({
         id:process.env.SPOTIFY_ID,
         secret:process.env.SPOTIFY_SECRET
     });
-   
-        spotify.search({ type: 'track', query: songName }, function(err, data) {
-        if ( err ) {
-         return console.log('Error occurred: ' + err);
-           
-        }
+
+    var numberOfResults = 20;
+
+    if (songName === "The+Sign+Ace+of+Base"){
+        numberOfResults = 1;
+    }
+
+        spotify.search({ type: 'track', query: songName,limit:numberOfResults}, function(err, data) {
+       
         console.log(data);
         
         var songs = data.tracks.items;
@@ -50,15 +57,18 @@ var getMyTweets = function(){
         for(var i=0; i<songs.length; i++){
             console.log[i];
             console.log('artist(s); ' + songs[i].artists.map(getArtistNames));
-            console.log('song name ' + songs[i].name);
+            console.log('song name: ' + songs[i].name);
             console.log('album: ' + songs[i].album.name);
             console.log('------------------------');
         }
+
+        
     });
 }
 
 var getMeMovie = function(movieName){
   request('http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy', function (error, response, body) {
+    // request(' http://www.omdbapi.com/?t=Mr+Nobody&plot=full', function (error, response, body) {  
     if(!error && response.statusCode == 200){
         console.log(body); 
      var jsonData = JSON.parse(body);
@@ -71,11 +81,10 @@ var getMeMovie = function(movieName){
      console.log('Language ' + jsonData.Language);
      console.log('Plot ' + jsonData.Plot);
      console.log('Actors; ' + jsonData.Actors);
-
-
-    }
+    }    
   });
 }
+    
 
 var doWhatItSays = function(){
     fs.readFile('random.txt', 'utf8', function (err, data){
@@ -93,15 +102,49 @@ var doWhatItSays = function(){
 }    
 //Switch case statment
 var pick = function(caseData, functionData){
+    console.log(functionData);
   switch(caseData){
     case "my-tweets":
         getMyTweets();
         break;
     case "spotify-this-song":
+   
+        if (process.argv[3]){
+            console.log("if the user has pased an argument")
         getMeSpotify(functionData);
+
+    }
+    else {
+        if (process.argv[3] != null) {
+            console.log("if the an argument= null")
+            var song = process.argv.slice(3).join('+');
+            getMeSpotify(functionData);
+        }
+        else {
+            const songName = "The+Sign+Ace+of+Base";
+            console.log("if the default song")
+            getMeSpotify(songName);
+        }
+    }
          break; 
     case 'movie-this':
+    if (process.argv[3]){
+        console.log("if the user has pased movie argument")
         getMeMovie(functionData);
+    } 
+    else {
+        if (process.argv[3] != null) {
+            console.log("if the movie argument= null")
+            var movie = process.argv.slice(3).join('+');
+            getMeMovie(functionData);
+        }
+        else {
+            const movieName = "Mr+Nobody";
+            console.log("If you haven't watched 'Mr. Nobody', then you should: http://www.imdb.com/title/tt0485947/");
+            console.log("It's on Netflix!");
+            getMeMovie(movieName);
+        }
+    }   
     break;    
     case 'do-what-it-says':
     doWhatItSays();
@@ -119,9 +162,9 @@ runThis(process.argv[2], process.argv[3]);
 
 
 
+    
 
 
-
-
+    
 
   
