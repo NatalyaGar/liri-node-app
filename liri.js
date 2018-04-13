@@ -60,9 +60,7 @@ var getMyTweets = function(){
             console.log('song name: ' + songs[i].name);
             console.log('album: ' + songs[i].album.name);
             console.log('------------------------');
-        }
-
-        
+        }    
     });
 }
 
@@ -88,8 +86,8 @@ var getMeMovie = function(movieName){
 var doWhatItSays = function(){
     fs.readFile('random.txt', 'utf8', function (err, data){
         if (err) throw err;
-        // console.log(data);
         var dataArr = data.split(','); 
+        getMeSpotify(dataArr[1]);
         
         if (dataArr.length == 2){
             pick(dataArr[0], dataArr[1]);
@@ -106,24 +104,16 @@ var pick = function(caseData, functionData){
     case "my-tweets":
         getMyTweets();
         break;
+
     case "spotify-this-song":
-   
-        if (process.argv[3]){
-            // console.log("if the user has pased an argument")
-        getMeSpotify(functionData);
-
+    var x =" ";
+    if (process.argv[3]){
+        console.log("if the user has pased an argument")
+    getMeSpotify(functionData);
     }
-    else {
-        if (process.argv[3] != null) {
-            console.log("if the an argument not null")
-            // var song = process.argv.slice(3).join('+');
-            getMeSpotify(functionData);
-        }
-        else {
-            const songName = "The+Sign+Ace+of+Base";
-            // console.log("if the default song")
-            getMeSpotify(songName);
-
+    else{ 
+        if(x){
+            getMeSpotify("The+Sign+Ace+of+Base"); 
         }
     }
          break; 
@@ -134,8 +124,6 @@ var pick = function(caseData, functionData){
     } 
     else {
         if (process.argv[3] != null) {
-            // console.log("if the movie argument not null")
-            var movie = process.argv.slice(3).join('+');
             getMeMovie(functionData);
         }
         else {
