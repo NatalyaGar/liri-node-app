@@ -24,8 +24,8 @@ var getMyTweets = function(){
         console.log(tweets);
         for(var i = 0; i<tweets.length; i++){
             console.log("Nat:" + tweets[i].created_at);
-            console.log(" ");
             console.log(tweets[i].text);
+            console.log(" ");
         }
       }
     });
@@ -67,20 +67,19 @@ var getMyTweets = function(){
 }
 
 var getMeMovie = function(movieName){
-  request('http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy', function (error, response, body) {
-    // request(' http://www.omdbapi.com/?t=Mr+Nobody&plot=full', function (error, response, body) {  
+  request('http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy', function (error, response, body) { 
     if(!error && response.statusCode == 200){
         console.log(body); 
      var jsonData = JSON.parse(body);
      
      console.log('Title: ' + jsonData.Title);
      console.log('Year: ' + jsonData.Year);
-     console.log('IMDB Rating ' + jsonData.imdbRating);
+     console.log('IMDB Rating: ' + jsonData.imdbRating);
      console.log('Rotten Tomatoes rating: ' + jsonData.Ratings[1].Value);
      console.log('Coutry: ' + jsonData.Country);
-     console.log('Language ' + jsonData.Language);
-     console.log('Plot ' + jsonData.Plot);
-     console.log('Actors; ' + jsonData.Actors);
+     console.log('Language: ' + jsonData.Language);
+     console.log('Plot: ' + jsonData.Plot);
+     console.log('Actors: ' + jsonData.Actors);
     }    
   });
 }
@@ -110,19 +109,19 @@ var pick = function(caseData, functionData){
     case "spotify-this-song":
    
         if (process.argv[3]){
-            console.log("if the user has pased an argument")
+            // console.log("if the user has pased an argument")
         getMeSpotify(functionData);
 
     }
     else {
         if (process.argv[3] != null) {
             console.log("if the an argument not null")
-            var song = process.argv.slice(3).join('+');
+            // var song = process.argv.slice(3).join('+');
             getMeSpotify(functionData);
         }
         else {
             const songName = "The+Sign+Ace+of+Base";
-            console.log("if the default song")
+            // console.log("if the default song")
             getMeSpotify(songName);
 
         }
@@ -130,12 +129,12 @@ var pick = function(caseData, functionData){
          break; 
     case 'movie-this':
     if (process.argv[3]){
-        console.log("if the user has pased movie argument")
+        // console.log("if the user has pased movie argument")
         getMeMovie(functionData);
     } 
     else {
         if (process.argv[3] != null) {
-            console.log("if the movie argument not null")
+            // console.log("if the movie argument not null")
             var movie = process.argv.slice(3).join('+');
             getMeMovie(functionData);
         }
