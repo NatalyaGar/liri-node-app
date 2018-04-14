@@ -13,7 +13,7 @@ var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 
 var getMyTweets = function(){ 
-
+//Display 20 last Tweets
     var client = new Twitter(keys.twitterKeys);
     var params = {
         screen_name: 'Nat97941816',
@@ -23,10 +23,12 @@ var getMyTweets = function(){
       if (!error) {
         console.log(tweets);
         for(var i = 0; i<tweets.length; i++){
-            console.log("Nat:" + tweets[i].created_at);
+            console.log("Created at: " + tweets[i].created_at);
             console.log(tweets[i].text);
             console.log(" ");
         }
+      }else{
+          console.log('Error occured');
       }
     });
 } 
@@ -56,18 +58,19 @@ var getMyTweets = function(){
         
         for(var i=0; i<songs.length; i++){
             console.log[i];
-            console.log('artist(s); ' + songs[i].artists.map(getArtistNames));
+            console.log('artist(s): ' + songs[i].artists.map(getArtistNames));
             console.log('song name: ' + songs[i].name);
+            console.log("Preview URL: " + songs[i].preview_url);
             console.log('album: ' + songs[i].album.name);
             console.log('------------------------');
-        }    
+        }  
+
     });
 }
 
 var getMeMovie = function(movieName){
   request('http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&apikey=trilogy', function (error, response, body) { 
     if(!error && response.statusCode == 200){
-        console.log(body); 
      var jsonData = JSON.parse(body);
      
      console.log('Title: ' + jsonData.Title);
@@ -93,8 +96,7 @@ var doWhatItSays = function(){
             pick(dataArr[0], dataArr[1]);
         }else if(dataArr.length == 1) {
             pick(dataArr[0]);
-        }
-        
+        }        
     });
 }    
 //Switch case statment
@@ -119,7 +121,6 @@ var pick = function(caseData, functionData){
          break; 
     case 'movie-this':
     if (process.argv[3]){
-        // console.log("if the user has pased movie argument")
         getMeMovie(functionData);
     } 
     else {
